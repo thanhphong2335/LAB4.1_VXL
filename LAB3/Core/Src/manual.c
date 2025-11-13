@@ -26,6 +26,7 @@ void fsm_manual_run(){
 				updateLEDBuffer(2, temp_red); // Cập nhật hiển thị ngay
 			}
 			if(isbuttonpressed(2)){
+				check();
 				time_red = temp_red;
 				time_green = temp_green;
 				time_yellow = temp_yellow;
@@ -58,6 +59,7 @@ void fsm_manual_run(){
 		    	updateLEDBuffer(3, temp_yellow); // Cập nhật hiển thị ngay
 		    }
 		    if(isbuttonpressed(2)){
+		    	check();
 		        time_red = temp_red;
 		        time_green = temp_green;
 		        time_yellow = temp_yellow;

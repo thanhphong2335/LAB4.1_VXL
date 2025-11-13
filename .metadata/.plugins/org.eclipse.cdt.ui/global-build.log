@@ -1,0 +1,7 @@
+05:38:46 **** Incremental Build of configuration Debug for project LAB3 ****
+make -j16 all 
+arm-none-eabi-size   LAB3.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12380	    196	   1988	  14564	   38e4	LAB3.elf
+Finished building: default.size.stdout
+ 

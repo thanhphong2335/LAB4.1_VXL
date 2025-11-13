@@ -96,6 +96,8 @@ void Error_Handler(void);
 #define BUTTON_2_GPIO_Port GPIOA
 #define BUTTON_3_Pin GPIO_PIN_9
 #define BUTTON_3_GPIO_Port GPIOA
+#define LED_BLINK_Pin GPIO_PIN_10
+#define LED_BLINK_GPIO_Port GPIOA
 #define EN3_Pin GPIO_PIN_3
 #define EN3_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

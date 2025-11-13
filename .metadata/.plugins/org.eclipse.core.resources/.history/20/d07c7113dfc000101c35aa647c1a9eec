@@ -1,0 +1,131 @@
+/*
+ * automatic.c
+ *
+ *  Created on: Oct 31, 2025
+ *      Author: Thanh Phong
+ */
+
+#include "automatic.h"
+
+int counter0 = 0;  // Đếm thời gian cho đèn đỏ đường A
+int counter1 = 0;  // Đếm thời gian cho đèn xanh đường A
+
+int time_red = 6;    // Thời gian đèn đỏ (6 giây)
+int time_green = 4;  // Thời gian đèn xanh (4 giây)
+int time_yellow = 2; // Thời gian đèn vàng (2 giây)
+
+void fsm_automatic_run() {
+
+    switch (status) {
+        case INIT:
+            // Khởi tạo: Tắt tất cả các LED và thiết lập thời gian cho các đèn
+            turnoffled();  // Hàm tắt tất cả các LED
+            counter0 = time_red;      // Đèn đỏ A: 6s
+            counter1 = time_green;    // Đèn xanh B: 4s
+            status = AUTO_RED_GREEN;  // Chuyển sang chế độ AUTO_RED_GREEN
+            setTimer(1, time_green * 1000);  // Timer cho đèn xanh B
+            setTimer(0, 1000);  // Timer đếm ngược mỗi giây
+            updateLEDBuffer(counter0, counter1);
+            break;
+
+        case AUTO_RED_GREEN:
+            // Đèn đỏ A (6s) - Đèn xanh B (4s)
+            setred(0);    // Đỏ A sáng
+            setgreen(1);  // Xanh B sáng
+
+            if (isTimerExpired(0)) {
+                counter0--;  // Giảm thời gian đèn đỏ A
+                counter1--;  // Giảm thời gian đèn xanh B
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
+            }
+
+            // Khi đèn xanh B hết (4s), chuyển sang vàng B
+            if (isTimerExpired(1)) {
+                // Đèn đỏ A còn: 6 - 4 = 2s
+                // Đèn vàng B: 2s
+                counter1 = time_yellow;  // Đèn vàng B: 2s
+                // counter0 giữ nguyên (đang còn 2s)
+                setTimer(1, time_yellow * 1000);
+                status = AUTO_RED_YELLOW;
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
+            }
+            break;
+
+        case AUTO_RED_YELLOW:
+            // Đèn đỏ A (2s còn lại) - Đèn vàng B (2s)
+            setred(0);     // Đỏ A sáng
+            setyellow(1);  // Vàng B sáng
+
+            if (isTimerExpired(0)) {
+                counter0--;  // Giảm thời gian đèn đỏ A
+                counter1--;  // Giảm thời gian đèn vàng B
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
+            }
+
+            // Khi đèn vàng B hết, chuyển sang xanh A - đỏ B
+            if (isTimerExpired(1)) {
+                counter0 = time_green;  // Đèn xanh A: 4s
+                counter1 = time_red;    // Đèn đỏ B: 6s
+                setTimer(1, time_green * 1000);  // Timer cho đèn xanh A
+                setTimer(0, 1000);
+                status = AUTO_GREEN_RED;
+                updateLEDBuffer(counter0, counter1);
+            }
+            break;
+
+        case AUTO_GREEN_RED:
+            // Đèn xanh A (4s) - Đèn đỏ B (6s)
+            setgreen(0);  // Xanh A sáng
+            setred(1);    // Đỏ B sáng
+
+            if (isTimerExpired(0)) {
+                counter0--;  // Giảm thời gian đèn xanh A
+                counter1--;  // Giảm thời gian đèn đỏ B
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
+            }
+
+            // Khi đèn xanh A hết (4s), chuyển sang vàng A
+            if (isTimerExpired(1)) {
+                // Đèn vàng A: 2s
+                // Đèn đỏ B còn: 6 - 4 = 2s
+                counter0 = time_yellow;  // Đèn vàng A: 2s
+                // counter1 giữ nguyên (đang còn 2s)
+                setTimer(1, time_yellow * 1000);
+                setTimer(0, 1000);
+                status = AUTO_YELLOW_RED;
+                updateLEDBuffer(counter0, counter1);
+            }
+            break;
+
+        case AUTO_YELLOW_RED:
+            // Đèn vàng A (2s) - Đèn đỏ B (2s còn lại)
+            setyellow(0);  // Vàng A sáng
+            setred(1);     // Đỏ B sáng
+
+            if (isTimerExpired(0)) {
+                counter0--;  // Giảm thời gian đèn vàng A
+                counter1--;  // Giảm thời gian đèn đỏ B
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
+            }
+
+            // Khi đèn vàng A hết, quay lại đỏ A - xanh B
+            if (isTimerExpired(1)) {
+                counter0 = time_red;    // Đèn đỏ A: 6s
+                counter1 = time_green;  // Đèn xanh B: 4s
+                setTimer(1, time_green * 1000);
+                setTimer(0, 1000);
+                status = AUTO_RED_GREEN;
+                updateLEDBuffer(counter0, counter1);
+            }
+            break;
+
+        default:
+            status = INIT;
+            break;
+    }
+}

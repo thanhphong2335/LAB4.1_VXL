@@ -18,113 +18,113 @@ void fsm_automatic_run() {
 
     switch (status) {
         case INIT:
-            // Khởi tạo: Tắt tất cả các LED và thiết lập thời gian cho các đèn
-
-            turnoffled();  // Hàm tắt tất cả các LED
-            counter0 = time_red;
-            counter1 = time_green;
+            turnoffled();
+            counter0 = time_red;      // Đèn đỏ A: 6s
+            counter1 = time_green;    // Đèn xanh B: 4s
             status = AUTO_RED_GREEN;  // Chuyển sang chế độ AUTO_RED_GREEN
-            setTimer(1, time_green * 1000);  // Đặt timer cho đèn đỏ đường A
-            setTimer(0, 1000);  // Đặt timer chung cho các chế độ
+            setTimer(1, time_green * 1000);  // Timer cho đèn xanh B
+            setTimer(0, 1000);  // Timer đếm ngược mỗi giây
+            updateLEDBuffer(counter0, counter1);
             break;
 
         case AUTO_RED_GREEN:
-
-            setred(0);
-            setgreen(1);
+            // Đèn đỏ A (6s) - Đèn xanh B (4s)
+            setred(0);    // Đỏ A sáng
+            setgreen(1);  // Xanh B sáng
 
             if (isTimerExpired(0)) {
-                counter0--;  // Giảm thời gian đèn đỏ đường A
-                counter1--;  // Giảm thời gian đèn xanh đường B
-                updateLEDBuffer(counter0, counter1);  // Cập nhật LED 7-segment
-                setTimer(0, 1000);  // Đặt lại timer cho đèn đỏ đường A
-            }
-
-            // Sau khi đếm hết thời gian đèn đỏ và đèn xanh, chuyển sang chế độ AUTO_YELLOW
-            if (isTimerExpired(1)) {
-                setyellow(1);
-                counter0 = time_red-time_green;  // Đặt lại thời gian cho đèn vàng
-                counter1 = time_yellow;
-                setTimer(1, time_yellow * 1000);  // Đặt timer cho đèn vàng
-                status = AUTO_RED_YELLOW;  // Chuyển sang chế độ AUTO_YELLOW
+                counter0--;  // Giảm thời gian đèn đỏ A
+                counter1--;  // Giảm thời gian đèn xanh B
                 updateLEDBuffer(counter0, counter1);
                 setTimer(0, 1000);
+            }
 
+            // Khi đèn xanh B hết (4s), chuyển sang vàng B
+            if (isTimerExpired(1)) {
+                // Đèn đỏ A còn: 6 - 4 = 2s
+                // Đèn vàng B: 2s
+                counter1 = time_yellow;  // Đèn vàng B: 2s
+                // counter0 giữ nguyên (đang còn 2s)
+                setTimer(1, time_yellow * 1000);
+                status = AUTO_RED_YELLOW;
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
             }
             break;
 
         case AUTO_RED_YELLOW:
+            // Đèn đỏ A (2s còn lại) - Đèn vàng B (2s)
+            setred(0);     // Đỏ A sáng
+            setyellow(1);  // Vàng B sáng
 
-            // Chế độ đèn vàng sáng trên cả hai đường
-            setred(0);  // Đèn đỏ tắt
-
-            setyellow(1);  // Đèn vàng sáng
             if (isTimerExpired(0)) {
-				counter0--;  // Giảm thời gian đèn xanh đường A
-				counter1--;  // Giảm thời gian đèn đỏ đường B
-				updateLEDBuffer(counter0, counter1);  // Cập nhật LED 7-segment
-				setTimer(0, 1000);  // Đặt lại timer cho đèn xanh đường A
-			}
-            // Sau khi đếm hết thời gian đèn vàng, chuyển sang chế độ AUTO_GREEN_RED
-            if (isTimerExpired(1)) {
-                counter0 = time_green;  // Đặt thời gian cho đèn xanh đường A
-                counter1 = time_red;    // Đặt thời gian cho đèn đỏ đường B
-                setTimer(1, time_green * 1000);  // Đặt timer cho đèn xanh đường A
+                counter0--;  // Giảm thời gian đèn đỏ A
+                counter1--;  // Giảm thời gian đèn vàng B
+                updateLEDBuffer(counter0, counter1);
                 setTimer(0, 1000);
-                status = AUTO_GREEN_RED;  // Chuyển sang chế độ AUTO_GREEN_RED
+            }
+
+            // Khi đèn vàng B hết, chuyển sang xanh A - đỏ B
+            if (isTimerExpired(1)) {
+                counter0 = time_green;  // Đèn xanh A: 4s
+                counter1 = time_red;    // Đèn đỏ B: 6s
+                setTimer(1, time_green * 1000);  // Timer cho đèn xanh A
+                setTimer(0, 1000);
+                status = AUTO_GREEN_RED;
                 updateLEDBuffer(counter0, counter1);
             }
             break;
 
         case AUTO_GREEN_RED:
-
-            // Chế độ đèn xanh đường A và đèn đỏ đường B sáng
-            setred(1);  // Đèn đỏ đường A sáng
-            setgreen(0);  // Đèn xanh đường A sáng
-
+            // Đèn xanh A (4s) - Đèn đỏ B (6s)
+            setgreen(0);  // Xanh A sáng
+            setred(1);    // Đỏ B sáng
 
             if (isTimerExpired(0)) {
-                counter0--;  // Giảm thời gian đèn xanh đường A
-                counter1--;  // Giảm thời gian đèn đỏ đường B
-                updateLEDBuffer(counter0, counter1);  // Cập nhật LED 7-segment
-                setTimer(0, 1000);  // Đặt lại timer cho đèn xanh đường A
-            }
-
-            // Sau khi đếm hết thời gian đèn xanh và đèn đỏ, quay lại chế độ AUTO_RED_GREEN
-            if (isTimerExpired(1)) {
-            	counter0 = time_yellow;
-            	counter1 = time_red;
-                setTimer(0, 1000);  // Đặt lại timer cho đèn đỏ đường A
-                setTimer(1, time_red * 1000);  // Đặt lại timer cho đèn đỏ đường B
-                status = AUTO_YELLOW_RED;  // Quay lại chế độ AUTO_RED_GREEN
+                counter0--;  // Giảm thời gian đèn xanh A
+                counter1--;  // Giảm thời gian đèn đỏ B
                 updateLEDBuffer(counter0, counter1);
                 setTimer(0, 1000);
             }
+
+            // Khi đèn xanh A hết (4s), chuyển sang vàng A
+            if (isTimerExpired(1)) {
+                // Đèn vàng A: 2s
+                // Đèn đỏ B còn: 6 - 4 = 2s
+                counter0 = time_yellow;  // Đèn vàng A: 2s
+                // counter1 giữ nguyên (đang còn 2s)
+                setTimer(1, time_yellow * 1000);
+                setTimer(0, 1000);
+                status = AUTO_YELLOW_RED;
+                updateLEDBuffer(counter0, counter1);
+            }
             break;
+
         case AUTO_YELLOW_RED:
+            // Đèn vàng A (2s) - Đèn đỏ B (2s còn lại)
+            setyellow(0);  // Vàng A sáng
+            setred(1);     // Đỏ B sáng
 
-			setyellow(0);
-			setred(1);
+            if (isTimerExpired(0)) {
+                counter0--;  // Giảm thời gian đèn vàng A
+                counter1--;  // Giảm thời gian đèn đỏ B
+                updateLEDBuffer(counter0, counter1);
+                setTimer(0, 1000);
+            }
 
-			if (isTimerExpired(0) == 1) {
-				counter0--;
-				counter1--;
-				updateLEDBuffer(counter0, counter1);
-				setTimer(0, 1000);
-			}
-
-			if (isTimerExpired(1) == 1){
-				status = AUTO_RED_GREEN;
-				counter0 = time_red;
-				counter1= time_green;
-				setTimer(1, time_green * 1000);
-				updateLEDBuffer(counter0, counter1);
-				setTimer(0, 1000);
-			}
-			break;
+            // Khi đèn vàng A hết, quay lại đỏ A - xanh B
+            if (isTimerExpired(1)) {
+                counter0 = time_red;    // Đèn đỏ A: 6s
+                counter1 = time_green;  // Đèn xanh B: 4s
+                setTimer(1, time_green * 1000);
+                setTimer(0, 1000);
+                status = AUTO_RED_GREEN;
+                updateLEDBuffer(counter0, counter1);
+            }
+            break;
 
         default:
-            status = AUTO_RED_GREEN;  // Quay lại chế độ AUTO_RED_GREEN nếu có lỗi
+            status = INIT;
             break;
     }
 }

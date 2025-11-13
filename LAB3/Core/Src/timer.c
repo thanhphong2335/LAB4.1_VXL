@@ -6,7 +6,7 @@
  */
 
 #include "timer.h"
-
+#include "scheduler.h"
 
 #define MAX_TIMER 10
 
@@ -52,5 +52,7 @@ void timer_run(){
 	 if(htim->Instance == TIM2){
 		 getKeyInput();
 		 timer_run();
+		 SCH_Update();
 	 }
+
  }
