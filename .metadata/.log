@@ -1,0 +1,19 @@
+!SESSION 2025-11-14 04:07:23.264 -----------------------------------------------
+eclipse.buildId=Version 1.7.0
+java.version=11.0.10
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  D:\GIT_LAB4.1_VXL\LAB3\.cproject
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 D:\GIT_LAB4.1_VXL\LAB3\.cproject
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-11-14 04:07:37.417
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-11-14 04:07:37.460
+!MESSAGE Log4j initialized with config file D:\GIT_LAB4.1_VXL\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-11-14 04:07:40.425
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-11-14 04:07:44.003
+!MESSAGE Indexed 'LAB3' (28 sources, 109 headers) in 2 sec: 7.620 declarations; 36.280 references; 6 unresolved inclusions; 295 syntax errors; 1.176 unresolved names (2,6%)
