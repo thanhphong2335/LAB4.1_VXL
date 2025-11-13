@@ -68,6 +68,48 @@ static void MX_TIM2_Init(void);
 void led1test(){
 	  HAL_GPIO_TogglePin(LED_BLINK_GPIO_Port, LED_BLINK_Pin);
   }
+void task_update_led7seg(void) {
+    printled();
+}
+void task_getkeyinput(void){
+	getKeyInput();
+}
+void task_timer_run(void){
+	timer_run();
+}
+void task_fsm_machine(void){
+	if (isbuttonpressed(0) == 1) {
+		  		  if (status == INIT || (status >= AUTO_RED_GREEN && status <= AUTO_YELLOW_RED)) {
+		  			  status = MAN_RED;
+		  			  turnoffled();
+		  			  setTimer(4, 500);
+		  			  updateLEDBuffer(2, temp_red);
+		  		  }
+		  		  else if (status == MAN_RED) {
+		  			  status = MAN_YELLOW;
+		  			  turnoffled();
+		  			  setTimer(4, 500);
+		  			  updateLEDBuffer(3, temp_yellow);
+		  		  }
+		  		  else if (status == MAN_YELLOW) {
+		  			  status = MAN_GREEN;
+		  			  turnoffled();
+		  			  setTimer(4, 500);
+		  			  updateLEDBuffer(4, temp_green);
+		  		  }
+		  		  else if (status == MAN_GREEN){
+
+		  			  status = INIT;
+		  			  turnoffled();
+		  		  }
+		  	  }
+		  	  if (status == INIT || (status >= AUTO_RED_GREEN && status <= AUTO_YELLOW_RED)){
+		  		  fsm_automatic_run();
+		  	  }
+		  	  else if (status >= MAN_RED && status <= MAN_GREEN){
+		  		  fsm_manual_run();
+		  	  }
+}
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -105,43 +147,14 @@ int main(void)
   setTimer(3,120);
   updateLEDBuffer(time_red,time_green);
 
+  SCH_Add_Task(task_update_led7seg,0,17);
+  SCH_Add_Task(task_getkeyinput, 0, 1);
   SCH_Add_Task(led1test, 0, 100);
+  SCH_Add_Task(task_timer_run, 0, 1);
+  SCH_Add_Task(task_fsm_machine, 1, 10);
   while (1)
   {
 	  SCH_Dispatch_Tasks();
-	  if (isbuttonpressed(0) == 1) {
-	  		  if (status == INIT || (status >= AUTO_RED_GREEN && status <= AUTO_YELLOW_RED)) {
-	  			  status = MAN_RED;
-	  			  turnoffled();
-	  			  setTimer(4, 500);
-	  			  updateLEDBuffer(2, temp_red);
-	  		  }
-	  		  else if (status == MAN_RED) {
-	  			  status = MAN_YELLOW;
-	  			  turnoffled();
-	  			  setTimer(4, 500);
-	  			  updateLEDBuffer(3, temp_yellow);
-	  		  }
-	  		  else if (status == MAN_YELLOW) {
-	  			  status = MAN_GREEN;
-	  			  turnoffled();
-	  			  setTimer(4, 500);
-	  			  updateLEDBuffer(4, temp_green);
-	  		  }
-	  		  else if (status == MAN_GREEN){
-
-	  			  status = INIT;
-	  			  turnoffled();
-	  		  }
-	  	  }
-	  	  if (status == INIT || (status >= AUTO_RED_GREEN && status <= AUTO_YELLOW_RED)){
-	  		  fsm_automatic_run();
-	  	  }
-	  	  else if (status >= MAN_RED && status <= MAN_GREEN){
-	  		  fsm_manual_run();
-	  	  }
-	  //fsm_traffic_light();
-	  printled();
 
     /* USER CODE END WHILE */
 

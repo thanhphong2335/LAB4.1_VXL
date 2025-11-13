@@ -187,10 +187,7 @@ void setyellow(int road){
 }
 
 void printled(){
-    if(isTimerExpired(3)){
     	update7SEG(index_led);
-        setTimer(3, 175);
         index_led++;
-		if (index_led >= MAX_LED) index_led = 0;          // 5ms mỗi LED → mượt
-    }
+		if (index_led >= MAX_LED) index_led = 0;
 }

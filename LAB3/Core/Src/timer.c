@@ -13,7 +13,7 @@
 
 int timer_counter[MAX_TIMER];
 int timer_flag[MAX_TIMER];
-int TIMER_CYCLE=10; //thay chu kì ngắt của timer là 1 hay 100 cũng không thay đổi s vì chỉ tăng hoặc giảm số lần gọi timerrun
+int TIMER_CYCLE=10;
 
 void init_timer_system(void){
     for (int i = 0; i < MAX_TIMER; i++){
@@ -50,9 +50,6 @@ void timer_run(){
  void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  {
 	 if(htim->Instance == TIM2){
-		 getKeyInput();
-		 timer_run();
 		 SCH_Update();
 	 }
-
  }

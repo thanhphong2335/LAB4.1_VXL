@@ -12,7 +12,6 @@
 extern int temp_red;
 extern int temp_green;
 extern int temp_yellow;
-static int button0_prev =0;
 void fsm_manual_run();
 
 #endif /* INC_MANUAL_H_ */
