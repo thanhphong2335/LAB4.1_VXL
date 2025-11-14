@@ -1775,8 +1775,8 @@ int main(void)
  8000d10:	4618      	mov	r0, r3
  8000d12:	f7ff fe09 	bl	8000928 <updateLEDBuffer>
 
-  SCH_Add_Task(task_update_led7seg,5,17);
- 8000d16:	2211      	movs	r2, #17
+  SCH_Add_Task(task_update_led7seg,5,10);
+ 8000d16:	220a      	movs	r2, #10
  8000d18:	2105      	movs	r1, #5
  8000d1a:	4810      	ldr	r0, [pc, #64]	; (8000d5c <main+0x90>)
  8000d1c:	f000 face 	bl	80012bc <SCH_Add_Task>

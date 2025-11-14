@@ -147,7 +147,7 @@ int main(void)
   setTimer(3,120);
   updateLEDBuffer(time_red,time_green);
 
-  SCH_Add_Task(task_update_led7seg,5,10);
+  SCH_Add_Task(task_update_led7seg,5,17);
   SCH_Add_Task(task_getkeyinput, 0, 1);
   SCH_Add_Task(led1test, 0, 100);
   SCH_Add_Task(task_timer_run, 10, 1);
