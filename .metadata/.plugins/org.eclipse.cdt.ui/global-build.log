@@ -1,6 +1,12 @@
-07:15:22 **** Incremental Build of configuration Debug for project LAB3 ****
+14:57:46 **** Incremental Build of configuration Debug for project LAB3 ****
 make -j16 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103x6 -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/scheduler.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103x6 -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/scheduler.d" -MT"Core/Src/scheduler.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/scheduler.o"
+../Core/Src/scheduler.c:32:17: warning: 'rearQueue' defined but not used [-Wunused-variable]
+   32 | static uint32_t rearQueue = 0;
+      |                 ^~~~~~~~~
+../Core/Src/scheduler.c:30:16: warning: 'array_Of_Task_ID' defined but not used [-Wunused-variable]
+   30 | static uint8_t array_Of_Task_ID[SCH_MAX_TASKS];
+      |                ^~~~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "LAB3.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\GIT_LAB4.1_VXL\LAB3\STM32F103C6UX_FLASH.ld" --specs=nosys.specs -Wl,-Map="LAB3.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: LAB3.elf
  
@@ -12,8 +18,8 @@ arm-none-eabi-objcopy  -O ihex  LAB3.elf  "LAB3.hex"
 arm-none-eabi-objcopy  -O binary  LAB3.elf  "LAB3.bin"
 Finished building: default.size.stdout
  
-Finished building: LAB3.hex
 Finished building: LAB3.bin
+Finished building: LAB3.hex
  
  
 Finished building: LAB3.list
