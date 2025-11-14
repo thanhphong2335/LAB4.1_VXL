@@ -147,14 +147,15 @@ int main(void)
   setTimer(3,120);
   updateLEDBuffer(time_red,time_green);
 
-  SCH_Add_Task(task_update_led7seg,5,17);
+  SCH_Add_Task(task_update_led7seg,0,17);
   SCH_Add_Task(task_getkeyinput, 0, 1);
   SCH_Add_Task(led1test, 0, 100);
-  SCH_Add_Task(task_timer_run, 10, 1);
-  SCH_Add_Task(task_fsm_machine, 10, 10);
+  SCH_Add_Task(task_timer_run, 0, 1);
+  SCH_Add_Task(task_fsm_machine, 1, 10);
   while (1)
   {
 	  SCH_Dispatch_Tasks();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -257,13 +258,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LED0_Pin|LED1_Pin|LED2_Pin|LED3_Pin
-                          |LED4_Pin|LED5_Pin|LED6_Pin|LED_BLINK_Pin
-                          |LED_TIMER_Pin, GPIO_PIN_RESET);
+                          |LED4_Pin|LED5_Pin|LED6_Pin|LED_BLINK_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, EN0_Pin|EN1_Pin|EN2_Pin|LED_RED_A_Pin
                           |LED_YELLOW_A_Pin|LED_GREEN_A_Pin|LED_RED_B_Pin|LED_YELLOW_B_Pin
-                          |LED_GREEN_B_Pin|EN3_Pin, GPIO_PIN_RESET);
+                          |LED_GREEN_B_Pin|EN3_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pins : BUTTON_1_Pin BUTTON_2_Pin BUTTON_3_Pin */
   GPIO_InitStruct.Pin = BUTTON_1_Pin|BUTTON_2_Pin|BUTTON_3_Pin;
@@ -272,11 +272,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LED0_Pin LED1_Pin LED2_Pin LED3_Pin
-                           LED4_Pin LED5_Pin LED6_Pin LED_BLINK_Pin
-                           LED_TIMER_Pin */
+                           LED4_Pin LED5_Pin LED6_Pin LED_BLINK_Pin */
   GPIO_InitStruct.Pin = LED0_Pin|LED1_Pin|LED2_Pin|LED3_Pin
-                          |LED4_Pin|LED5_Pin|LED6_Pin|LED_BLINK_Pin
-                          |LED_TIMER_Pin;
+                          |LED4_Pin|LED5_Pin|LED6_Pin|LED_BLINK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
